@@ -171,7 +171,7 @@ def choose_character_screen():
             char_skill_text = FONT_SMALL.render(f"Kỹ năng: {char.skill['name']} (ST: {char.skill['power']}, Mana: {char.skill['mana_cost']})", True, WHITE)
             SCREEN.blit(char_skill_text, (50, y_offset + 70))
 
-            button_action = draw_button(SCREEN, f"Chọn", SCREEN_WIDTH - 180, y_offset + 30, 150, 50, BLUE, LIGHT_GRAY, i, FONT_MEDIUM)
+            button_action = draw_button(SCREEN, f"Chọn", SCREEN_WIDTH - 180, y_offset + 30, 90, 50, BLUE, LIGHT_GRAY, i, FONT_MEDIUM)
             if button_action is not None:
                 current_character_index = button_action
                 CHARACTER_DATA[current_character_index].reset_stats() 
@@ -194,7 +194,7 @@ def main_menu_screen():
         title_text_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, 100))
         SCREEN.blit(title_text, title_text_rect)
 
-        start_game_action = draw_button(SCREEN, "Bắt đầu trò chơi", (SCREEN_WIDTH // 2) - 150, 250, 300, 70, GREEN, LIGHT_GRAY, "start", FONT_MEDIUM)
+        start_game_action = draw_button(SCREEN, "Đánh boss", (SCREEN_WIDTH // 2) - 150, 250, 300, 70, GREEN, LIGHT_GRAY, "start", FONT_MEDIUM)
         if start_game_action == "start":
             main_game_screen(current_character_index)
 
@@ -323,12 +323,10 @@ def main_game_screen(char_idx):
                     player_char.skill["current_cooldown"] = player_char.skill["cooldown_turns"]
                 elif player_char.skill["current_cooldown"] > 0:
                     add_game_message("Kỹ năng đang trong thời gian hồi chiêu!")
-                    # Dòng 'continue' này bị lặp, loại bỏ để không bỏ qua các logic tiếp theo
-                    # add_game_message(f"Không đủ Mana để sử dụng kỹ năng! Cần {player_char.skill['mana_cost']} Mana.")
-                    # continue 
-                else: # Thêm điều kiện này để xử lý trường hợp không đủ mana
+                    continue 
+                else: 
                     add_game_message(f"Không đủ Mana để sử dụng kỹ năng! Cần {player_char.skill['mana_cost']} Mana.")
-                    continue # Giữ continue ở đây nếu bạn muốn bỏ qua lượt
+                    continue 
             elif action_performed == "heal":
                 if player_char.current_mana >= 10: 
                     player_char.current_hp += 20
@@ -339,7 +337,6 @@ def main_game_screen(char_idx):
                     add_game_message("Không đủ mana để hồi phục! Cần 10 Mana.")
                     continue 
             
-            # Kiểm tra chiến thắng/thua sau khi hành động của người chơi và kẻ địch
             if enemy_current_hp <= 0:
                 end_game_screen("YOU WIN!", GREEN) 
                 main_menu_screen()
